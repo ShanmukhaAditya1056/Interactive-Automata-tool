@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>DFA Simulator</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    .state-box {
+      display: inline-block;
+      padding: 12px 20px;
+      border-radius: 8px;
+      margin: 5px;
+      background-color: #ede7f6;
+      border: 2px solid #673ab7;
+      font-weight: bold;
+      transition: transform 0.3s;
+    }
+
+    .state-box.active {
+      background-color: #d1c4e9;
+      transform: scale(1.1);
+      box-shadow: 0 0 10px #9575cd;
+    }
+
+    #result {
+      font-size: 20px;
+      margin-top: 20px;
+      font-weight: bold;
+    }
+
+    .back-btn {
+      display: inline-block;
+      margin-top: 20px;
+      padding: 10px 15px;
+      background-color: #8d6e63;
+      color: white;
+      border-radius: 5px;
+      text-decoration: none;
+    }
+  </style>
+</head>
+<body>
+  <header>DFA Simulator</header>
+  <main>
+    <input type="text" id="dfaInput" placeholder="Enter binary string e.g., 1101" />
+    <button onclick="simulateDFA()">Simulate</button>
+
+    <div style="margin-top: 30px;">
+      <div class="state-box" id="q0">q0</div>
+      <div class="state-box" id="q1">q1</div>
+      <div class="state-box" id="q2">q2</div>
+    </div>
+
+    <p id="result"></p>
+    <a href="index.html" class="back-btn">⬅ Back to Menu</a>
+  </main>
+
+  <script>
+    function resetStates() {
+      document.querySelectorAll(".state-box").forEach(box => {
+        box.classList.remove("active");
+      });
+    }
+
+    function highlight(stateId) {
+      resetStates();
+      document.getElementById(stateId).classList.add("active");
+    }
+
+    function simulateDFA() {
+      const input = document.getElementById("dfaInput").value.trim();
+      const regex = /^[01]+$/;
+      if (!regex.test(input)) {
+        document.getElementById("result").textContent = "⚠️ Enter only 0s and 1s.";
+        return;
+      }
+
+      let state = "q0";
+      highlight("q0");
+
+      for (let i = 0; i < input.length; i++) {
+        const symbol = input[i];
+
+        if (state === "q0") {
+          state = symbol === "0" ? "q1" : "q0";
+        } else if (state === "q1") {
+          state = symbol === "1" ? "q2" : "q1";
+        } else if (state === "q2") {
+          state = symbol === "0" ? "q1" : "q0";
+        }
+
+        highlight(state);
+      }
+
+      const accepted = state === "q2";
+      document.getElementById("result").textContent = accepted
+        ? "✅ String Accepted (Ends with 01)"
+        : "❌ String Rejected";
+    }
+  </script>
+</body>
+</html>

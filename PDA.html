@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>PDA Simulator</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .stack {
+      margin-top: 20px;
+      display: inline-block;
+      border: 2px solid #009688;
+      border-radius: 6px;
+      padding: 10px;
+      background-color: #e0f2f1;
+    }
+
+    .stack div {
+      padding: 8px;
+      margin: 4px 0;
+      background: #a7ffeb;
+      border: 1px solid #00796b;
+      font-weight: bold;
+    }
+
+    .state {
+      margin: 10px;
+      font-size: 20px;
+    }
+
+    .back-btn {
+      display: inline-block;
+      margin-top: 20px;
+      padding: 10px 15px;
+      background-color: #8d6e63;
+      color: white;
+      border-radius: 5px;
+      text-decoration: none;
+    }
+  </style>
+</head>
+<body>
+  <header>PDA Simulator</header>
+  <main>
+    <input type="text" id="inputString" placeholder="Enter string (a^n b^n)">
+    <button onclick="simulatePDA()">Simulate</button>
+    <div class="state" id="pdaState">Current State: q0</div>
+    <div class="stack" id="stackDisplay"></div>
+    <p id="pdaResult"></p>
+    <a href="index.html" class="back-btn">⬅ Back to Menu</a>
+  </main>
+
+  <script>
+    function simulatePDA() {
+      const input = document.getElementById("inputString").value.trim();
+      const stack = [];
+      let state = 'q0';
+      let i = 0;
+
+      document.getElementById("pdaResult").textContent = '';
+      const stackDisplay = document.getElementById("stackDisplay");
+      stackDisplay.innerHTML = '';
+
+      while (i < input.length) {
+        const symbol = input[i];
+        if (state === 'q0') {
+          if (symbol === 'a') {
+            stack.push('A');
+            i++;
+          } else if (symbol === 'b') {
+            state = 'q1';
+          } else {
+            break;
+          }
+        }
+
+        if (state === 'q1') {
+          if (symbol === 'b' && stack[stack.length - 1] === 'A') {
+            stack.pop();
+            i++;
+          } else {
+            break;
+          }
+        }
+      }
+
+      stack.forEach(s => {
+        const d = document.createElement("div");
+        d.textContent = s;
+        stackDisplay.appendChild(d);
+      });
+
+      document.getElementById("pdaState").textContent = "Current State: " + state;
+      document.getElementById("pdaResult").textContent =
+        i === input.length && stack.length === 0 ? "✅ Accepted" : "❌ Rejected";
+    }
+  </script>
+</body>
+</html>

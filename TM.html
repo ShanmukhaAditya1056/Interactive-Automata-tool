@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Turing Machine Simulator</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .container { max-width: 900px; margin: 40px auto; background: white; padding: 30px; border-radius: 10px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
+    .tape { display: flex; overflow-x: auto; border: 2px solid #bbb; margin: 20px auto; padding: 10px; max-width: 800px; border-radius: 10px; }
+    .cell { min-width: 40px; padding: 10px; border: 1px solid #ccc; margin: 0 2px; border-radius: 6px; background: #f1f8e9; font-weight: bold; position: relative; transition: transform 0.3s ease; }
+    .head { position: absolute; top: -35px; width: 0; height: 0; border-left: 10px solid transparent; border-right: 10px solid transparent; border-bottom: 15px solid #00796b; left: 50%; transform: translateX(-50%); }
+    input[type=text] { padding: 10px; font-size: 16px; margin-top: 15px; width: 220px; }
+    button { padding: 10px 20px; background-color: #00796b; color: white; border: none; border-radius: 5px; font-size: 16px; margin: 10px; cursor: pointer; }
+    .back-btn { display: inline-block; margin-top: 20px; padding: 10px 15px; background-color: #8d6e63; color: white; border-radius: 5px; text-decoration: none; }
+  </style>
+</head>
+<body>
+  <header>Turing Machine Simulator</header>
+  <div class="container">
+    <input type="text" id="inputTape" placeholder="Enter binary string e.g., 1011">
+    <br>
+    <button onclick="startSimulation()">Run</button>
+    <div class="tape" id="tape"></div>
+    <a href="index.html" class="back-btn">⬅ Back to Menu</a>
+  </div>
+
+  <script>
+    let tape = [], headPos = 0, state = 'q0', interval = null;
+
+    const rules = {
+      'q0,1': ['q0', '0', 'L'],
+      'q0,0': ['q1', '1', 'R']
+    };
+
+    function renderTape() {
+      const tapeEl = document.getElementById('tape');
+      tapeEl.innerHTML = '';
+      for (let i = 0; i < tape.length; i++) {
+        const cell = document.createElement('div');
+        cell.className = 'cell';
+        cell.textContent = tape[i];
+        if (i === headPos) {
+          const head = document.createElement('div');
+          head.className = 'head';
+          cell.appendChild(head);
+        }
+        tapeEl.appendChild(cell);
+      }
+    }
+
+    function step() {
+      const symbol = tape[headPos];
+      const key = `${state},${symbol}`;
+      if (!rules[key]) {
+        clearInterval(interval);
+        alert('Simulation ended at state: ' + state);
+        return;
+      }
+      const [newState, newSymbol, move] = rules[key];
+      tape[headPos] = newSymbol;
+      state = newState;
+      headPos += move === 'R' ? 1 : -1;
+      if (headPos < 0) { tape.unshift('0'); headPos = 0; }
+      if (headPos >= tape.length) tape.push('0');
+      renderTape();
+    }
+
+    function startSimulation() {
+      const input = document.getElementById('inputTape').value.trim();
+      if (!input.match(/^[01]+$/)) return alert('Please enter a binary string.');
+      tape = input.split('');
+      state = 'q0';
+      headPos = tape.length - 1;
+      renderTape();
+      clearInterval(interval);
+      interval = setInterval(step, 800);
+    }
+  </script>
+</body>
+</html>
