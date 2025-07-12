@@ -55,7 +55,11 @@ interactive-automata-tool/
 >> Follows defined transition rules
 📸 Screenshots
 >> <img width="1373" height="833" alt="Screenshot 2025-07-12 102609" src="https://github.com/user-attachments/assets/c2064f20-742b-4bc3-8836-89cdd5f3f66a" />
+
+
 >> <img width="1759" height="895" alt="Screenshot 2025-07-12 102418" src="https://github.com/user-attachments/assets/b0cc4de6-b5a2-4330-9898-d283bca09bbc" />
+
+
 >> <img width="1765" height="827" alt="Screenshot 2025-07-12 101843" src="https://github.com/user-attachments/assets/8f28ee67-8347-4587-9786-2961d3718b32" />
 
 
